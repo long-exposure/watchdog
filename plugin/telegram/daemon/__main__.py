@@ -99,7 +99,8 @@ class TelegramPlugin(dbus.service.Object):
                     token = watchdog.config.get_option('telegram', 'token')
                     self._bot.start_message_loop(token, self._bot_callback)
                 botName = self._bot.get_username()
-                status = dbus.Dictionary({'IsConnected': True,
+                status = dbus.Dictionary({'Result': 'OK',
+                                          'IsConnected': True,
                                           'Info': 'Bot: @' + botName,
                                           'BotName': botName,
                                           'SendImages': (watchdog.config.get_option('telegram', 'send_images') == 'true'),
@@ -108,7 +109,10 @@ class TelegramPlugin(dbus.service.Object):
                                           'ShutdownMessage': watchdog.config.get_option('telegram', 'shutdown_message') },
                                           signature='sv')
             else:
-                status = dbus.Dictionary({'IsConnected': False, 'Info': 'No bot token found'}, signature='sv')
+                status = dbus.Dictionary({'Result': 'OK',
+                                          'IsConnected': False,
+                                          'Info': 'No bot token found'},
+                                         signature='sv')
             logger.debug('Telegram status: ' + str(status))
             return status
 

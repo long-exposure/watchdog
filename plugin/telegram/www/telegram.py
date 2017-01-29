@@ -14,16 +14,10 @@ def status(req):
         proxy = bus.get_object('net.longexposure.watchdog.plugin.telegram', '/')
         broker = dbus.Interface(proxy, 'net.longexposure.watchdog.plugin.telegram')
         status = broker.get_status()
-        if (status['IsConnected'] == True):
-            status['Result'] = 'OK'
-        else:
-            status['Result'] = 'ERROR'
         return json.dumps(status)
 
     except Exception, e:
         return json.dumps({ 'Result': 'ERROR', 'Message': 'Getting status failed: ' + str(e) })
-
-    return json.dumps({ 'Result': 'ERROR', 'Message': 'Getting status failed after 5 trials: ' + errorMessage})
 
 
 def save_token(req):

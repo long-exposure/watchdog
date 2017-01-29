@@ -1,5 +1,5 @@
 send_images = false
-verbose = true
+verbose = false
 startup_message = Been awakened
 shutdown_message = Been terminated
 subscribers =
