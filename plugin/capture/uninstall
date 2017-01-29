@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Custom uninstall script for the WATCHDOG capture plugin
+
+rm -R /usr/share/javascript/lightGallery

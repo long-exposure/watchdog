@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Custom uninstall script for the WATCHDOG dropbox plugin
+
+# remove dbus config
+rm -v /etc/dbus-1/system.d/watchdog-plugin-dropbox.conf

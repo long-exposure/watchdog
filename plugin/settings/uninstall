@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Custom uninstall script for the WATCHDOG settings plugin
+
+rm -R /usr/share/javascript/multi-select

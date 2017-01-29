@@ -1,0 +1,13 @@
+apache2
+apache2-utils
+libapache2-mod-python
+libapache2-mod-authnz-external
+pwauth
+libjs-jquery
+libjs-jquery-ui
+libjs-jquery-ui-theme-sunny
+git
+motion
+python-gobject
+python-dbus
+sendemail

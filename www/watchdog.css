@@ -1,0 +1,56 @@
+/*
+  Watchdog - Building supervision with Raspberry Pi
+  (C)2016 - Norbert Huffschmid
+*/
+
+input[readonly] {
+	background: #ccc;
+}
+
+button, input, select, textarea, div#SensitivityInput {
+	margin: 8px;
+}
+
+div#watchdog-title {
+    font-size: 150%;
+    font-weight: bold;
+    position: absolute;
+  	top: 0;
+  	right: 6px;
+}
+
+div#PluginContainer {
+	position: relative;
+}
+
+div#CameraPreview {
+	position: absolute;
+  	top: 0;
+  	right: 0;
+	height: 238px;
+}
+
+div#CameraPreview img {
+	height:100%;
+}
+
+div.ButtonPanel {
+	margin-top: 6px;
+	margin-bottom: 6px;
+	border-radius: 6px;
+    border: 2px solid #888;
+    padding: 6px; 
+}
+
+div#ms-PluginSelect {
+	margin-top: 6px;
+	margin-bottom: 12px;
+	border-radius: 6px;
+    border: 2px solid #888;
+    padding: 6px; 
+}
+
+div#ms-PluginSelect div.custom-header {
+	color: #fff;
+	background: #c81e4a;
+}

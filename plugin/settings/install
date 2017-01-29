@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Custom install script for the WATCHDOG settings plugin
+
+# determine plugin directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CWD=$(pwd)
+
+# download multi-select jQuery library
+cd /usr/share/javascript
+git clone git://github.com/lou/multi-select
+cd multi-select
+git checkout tags/0.9.12
+
+# restore working directory 
+cd $CWD

@@ -1,0 +1,26 @@
+div#TelegramSubscriberList {
+	margin-top: 24px;
+	margin-bottom: 24px;
+}
+
+div#TelegramSubscribeHint {
+    font-size: 80%;
+}
+
+div#TelegramLogo {
+	position: absolute;
+  	top: 0;
+  	right: 0;
+}
+
+div#TelegramInfoMessages {
+	border-radius: 6px;
+    border: 2px solid #888;
+    background-color: lightgray;
+    padding: 6px; 
+	margin-left: 6px;
+}
+
+input#TelegramStartupMessage, input#TelegramShutdownMessage {
+	width: 97%; // TODO: find better solution
+}

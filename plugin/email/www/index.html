@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>Email</title>
+	  	<link href="watchdog.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="PluginContainer">
+			<table id="EmailTable">
+				<tr>
+					<td>Send email</td>
+					<td><input id="Active" type="checkbox" /></td>
+				</tr>
+				<tr>
+					<td>Recipient(s):</td>
+					<td><input id="Recipient" size="60" /></td>
+				</tr>
+				<tr>
+					<td>Subject:</td>
+					<td><input id="Subject" size="30" /></td>
+				</tr>
+				<tr>
+					<td>Message:</td>
+					<td><textarea id="Message" rows="4" cols="60"></textarea></td>
+				</tr>
+				<tr>
+					<td>Attach images</td>
+					<td><input id="Attach" type="checkbox" /></td>
+				</tr>
+				<tr>
+					<td>SMTP Server:</td>
+					<td><input id="Smtp" size="30" /></td>
+				</tr>
+				<tr>
+					<td>User:</td>
+					<td><input id="User" size="30" /></td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td><input id="Password" type="password" size="30" /></td>
+				</tr>
+			</table>
+			<div id="EmailButtonPanel" class="ButtonPanel">
+				<input id="EmailSaveButton" type="button" value="Save" />
+				<input id="EmailCancelButton" type="button" value="Cancel" />
+			</div>
+		</div>
+	</body>
+</html>

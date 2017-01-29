@@ -1,0 +1,8 @@
+active = false
+recipient = myemail@myprovider.com
+subject = Watchdog Alarm
+message = Alarm detected!
+attach = true
+smtp = smtp.myprovider.com
+user = myAccount@myprovider.com
+password = 

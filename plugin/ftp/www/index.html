@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>FTP</title>
+	  	<link href="watchdog.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="PluginContainer">
+			<table id="FtpTable">
+				<tr>
+					<td>Upload captures</td>
+					<td>
+						<input id="FtpActive" type="checkbox" />
+					</td>
+				</tr>
+				<tr>
+					<td>Host:</td>
+					<td>
+						<input id="FtpHost" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td>User:</td>
+					<td>
+						<input id="FtpUser" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td>Password:</td>
+					<td>
+						<input id="FtpPassword" type="password" size="40" />
+					</td>
+				</tr>
+				<tr>
+					<td>Directory</td>
+					<td>
+						<input id="FtpDirectory" size="40" />
+						<input id="FtpClearDirButton" type="button" value="Clear" />
+					</td>
+				</tr>
+			</table>
+			<div id="FtpButtonPanel" class="ButtonPanel">
+				<input id="FtpSaveButton" type="button" value="Save" />
+				<input id="FtpTestButton" type="button" value="Test" />
+				<input id="FtpCancelButton" type="button" value="Cancel" />
+			</div>
+		</div>
+	</body>
+</html>

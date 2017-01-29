@@ -1,0 +1,277 @@
+#!/bin/bash
+
+# This script installs the watchdog software on Raspberry PI from scratch
+# Preconditions:
+# up-to-date raspbian jessie lite linux (via apt-get update and apt-get upgrade)
+# timezone configured (via dpkg-reconfigure tzdata or raspi-config)
+# locales configured (via dpkg-reconfigure locales or raspi-config , e.g. de_DE.UTF-8)
+
+if [[ $EUID -ne 0 ]]; then
+  echo "This install script requires root privileges"
+  exit 1
+fi
+
+echo "Installing watchdog building supervision ..."
+
+# change into script directory
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CWD=$(pwd)
+cd $DIR
+
+
+# enable camera (unfortunately there is no headless version of raspi-config, so we have to simulate it)
+if grep -q "^start_x=1" "/boot/config.txt"; then
+  echo "Camera is already enabled."
+else
+  echo "start_x=1" >> /boot/config.txt
+  echo "gpu_mem=128" >> /boot/config.txt
+  echo "Enabled Camera."
+fi
+
+
+# install uv4l following this document:
+# https://blog.tausys.de/2015/02/11/raspberry-pi-als-webcam-bzw-motion-tracker/
+if [ ! -f /dev/video0 ]; then
+  echo "install uv4l ..."
+  echo deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ wheezy main | sudo tee /etc/apt/sources.list.d/uv4l.list
+  curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | sudo apt-key add -
+  apt-get update
+  apt-get -y install uv4l uv4l-raspicam uv4l-raspicam-extras
+  service uv4l_raspicam start
+fi
+
+echo "Install required debian packages ..."
+cat package-list | xargs apt-get -y install
+
+
+# store version info
+git describe --tags > /etc/watchdog.version
+
+
+# create initial config file
+cat <<EOF > /etc/watchdog.conf
+# This is the watchdog configuration file
+# Do not edit by hand!
+# This file is maintained by the watchdog web interface!
+
+[motion]
+sensitivity = 50
+
+[plugins]
+active: settings,about,capture,livecam,email,dropbox
+inactive:
+EOF
+
+# create initial logging config file
+cat <<EOF > /etc/watchdog-logging.conf
+[formatters]
+keys: detailed
+
+[handlers]
+keys: syslog
+
+[loggers]
+keys: root
+
+[formatter_detailed]
+format: %(name)s[%(levelname)s]: %(message)s
+
+[handler_syslog]
+class: handlers.SysLogHandler
+args = ('/dev/log', handlers.SysLogHandler.LOG_USER)
+formatter: detailed
+
+[logger_root]
+level: INFO
+handlers: syslog
+EOF
+
+
+# set hostname
+mv /etc/hostname /etc/hostname.orig 
+echo 'watchdog' > /etc/hostname
+
+
+# setup apache
+
+# setup site configuration file
+cat <<EOF > /etc/apache2/sites-available/watchdog.conf
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+	DocumentRoot $DIR/www
+	AddExternalAuth pwauth /usr/sbin/pwauth
+	SetExternalAuthMethod pwauth pipe
+	<Directory $DIR/www>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride AuthConfig
+		AuthName "WATCHDOG"
+		AuthType Basic
+		AuthBasicProvider socache external
+		AuthExternalProvideCache On
+		AuthnCacheProvideFor external
+		AuthExternal pwauth
+		Require valid-user
+		AddHandler mod_python .py
+		PythonHandler mod_python.publisher
+	</Directory>
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	LogLevel warn
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
+
+# start local web server
+a2dissite -q 000-default.conf
+a2ensite -q watchdog.conf
+a2enmod -q socache_shmcb
+a2enmod -q authn_socache
+a2enmod -q headers
+a2enconf -q javascript-common
+service apache2 reload
+
+
+# download jtable jQuery library
+cd /usr/share/javascript
+git clone git://github.com/hikalkan/jtable.git
+cd jtable
+git checkout tags/v2.4.0
+
+
+# patch motion start script
+if grep -q "^CONFIG_FILE=/" "/etc/init.d/motion"
+then
+  echo "motion start script is already patched."
+else
+  echo "Patching motion start script ..."
+  sed -i '\#^DESC="motion detection daemon"#a CONFIG_FILE=/etc/motion/motion.conf' /etc/init.d/motion
+  sed -i '\#chown motion:motion /var/run/motion#a export LD_PRELOAD=/usr/lib/uv4l/uv4lext/armv6l/libuv4lext.so' /etc/init.d/motion
+  sed -i 's/--chuid motion/--chuid motion -- -c $CONFIG_FILE/' /etc/init.d/motion
+fi
+
+
+# enable autostart of motion daemon
+sed -i 's/start_motion_daemon=no/start_motion_daemon=yes/' /etc/default/motion
+
+
+# patch motion.conf
+sed -i 's/ffmpeg_output_movies on/ffmpeg_output_movies off/' /etc/motion/motion.conf
+sed -i 's/webcontrol_localhost on/webcontrol_localhost off/' /etc/motion/motion.conf
+sed -i 's/webcontrol_html_output on/webcontrol_html_output off/' /etc/motion/motion.conf
+sed -i 's/; on_event_start value/on_event_start python -m watchdog.motion_proxy event_start/' /etc/motion/motion.conf
+sed -i 's/; on_event_end value/on_event_end python -m watchdog.motion_proxy event_end/' /etc/motion/motion.conf
+sed -i 's/; on_picture_save value/on_picture_save python -m watchdog.motion_proxy picture_save %f/' /etc/motion/motion.conf
+
+
+# add bcm2835-v4l2 kernel module at boot time
+if grep -q "^bcm2835-v4l2$" "/etc/modules"
+then
+  echo "kernel module bcm2835-v4l2 already included in /etc/modules."
+else
+  echo "adding bcm2835-v4l2 to /etc/modules"
+  echo bcm2835-v4l2 >> /etc/modules
+fi
+
+
+# install pip and required packages
+# (apt-get install pip results in strange ImportErrors: cannot import name IncompleteRead)
+easy_install pip
+pip install setuptools
+pip install requests
+
+
+# handle permissions
+groupadd watchdog
+usermod -a -G watchdog motion
+usermod -a -G watchdog www-data
+chgrp watchdog /etc/watchdog.conf
+chgrp watchdog /etc/watchdog-logging.conf
+chmod 664 /etc/watchdog.conf
+chmod 664 /etc/watchdog-logging.conf
+chown motion /etc/motion/motion.conf
+echo "%watchdog ALL=NOPASSWD: /usr/sbin/service motion restart" >> /etc/sudoers
+
+
+# integrate in PYTHONPATH
+ln -s $DIR/python/watchdog /usr/local/lib/python2.7/dist-packages/watchdog
+
+
+# include captures folder in webspace
+ln -s /var/lib/motion $DIR/www/captures
+
+
+# start motion
+systemctl daemon-reload
+service motion start
+
+
+# create dbus config
+cat <<EOF > /etc/dbus-1/system.d/net.longexposure.watchdog.conf
+<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+
+  <!-- ../system.conf have denied everything, so we just punch some holes -->
+
+  <policy user="root">
+    <allow own="net.longexposure.watchdog"/>
+    <allow send_destination="net.longexposure.watchdog"/>
+  </policy>
+
+  <policy user="motion">
+    <allow send_destination="net.longexposure.watchdog"/>
+  </policy>
+
+  <policy user="www-data">
+    <allow send_destination="net.longexposure.watchdog"/>
+  </policy>
+
+</busconfig>
+EOF
+
+
+# copy startup script
+cp -v $DIR/watchdog /etc/init.d
+
+
+# make script executable
+chmod +x /etc/init.d/watchdog
+
+
+# create and start daemon
+update-rc.d watchdog defaults
+/etc/init.d/watchdog start
+
+
+# install plugins
+python -m watchdog.plugin.installer -v install capture
+python -m watchdog.plugin.installer -v install email
+python -m watchdog.plugin.installer -v install livecam
+python -m watchdog.plugin.installer -v install dropbox
+python -m watchdog.plugin.installer -v install telegram
+python -m watchdog.plugin.installer -v install ftp
+python -m watchdog.plugin.installer -v install settings
+python -m watchdog.plugin.installer -v install about
+
+
+# modify /etc/fstab to map certain folders to ramdisk
+if ! grep -q "^none" /etc/fstab
+then
+	echo "none /var/log tmpfs size=10M,noatime 0 0" >> /etc/fstab
+	echo "none /var/tmp tmpfs size=10M,noatime 0 0" >> /etc/fstab
+	echo "none /var/lib/motion tmpfs size=100M,noatime,mode=0777 0 0" >> /etc/fstab
+fi
+cp -v $DIR/apache2-tmpfs /etc/init.d
+chmod +x /etc/init.d/apache2-tmpfs
+update-rc.d apache2-tmpfs defaults 90 10
+
+
+# restore working directory 
+cd $CWD
+
+
+echo "Watchdog installation completed."
+read -p "Reboot required. Reboot now (y/n)? " choice
+case "$choice" in 
+  y|Y ) reboot;;
+  * ) echo "Remember to reboot before using watchdog!";;
+esac

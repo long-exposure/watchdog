@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Custom install script for the WATCHDOG telegram plugin
+
+echo "Installing WATCHDOG telegram plugin ..."
+
+# create dbus config
+cat <<EOF > /etc/dbus-1/system.d/watchdog-plugin-telegram.conf
+<!DOCTYPE busconfig PUBLIC "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+
+  <!-- ../system.conf have denied everything, so we just punch some holes -->
+
+  <policy user="root">
+    <allow own="net.longexposure.watchdog.plugin.telegram"/>
+  </policy>
+
+  <policy user="www-data">
+    <allow send_destination="net.longexposure.watchdog.plugin.telegram"/>
+  </policy>
+
+</busconfig>
+EOF
+
+echo "WATCHDOG telegram plugin installed."

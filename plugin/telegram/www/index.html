@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>Telegram</title>
+	  	<link href="watchdog.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="PluginContainer">
+			<div id="TelegramLogo">
+				<a href="https://web.telegram.org/" target="_blank">
+					<img src="/plugin/telegram/telegram.png" alt="Telegram logo" width="64px" />
+				</a>
+			</div>
+			<div id="TelegramStatus">
+				<div id=TelegramDisplayName></div>
+			</div>
+			<div id="TelegramDetails">
+				<div>
+					<input id="TelegramSendImagesCheckbox" type="checkbox" />Send alarm messages
+					<br />
+					<input id="TelegramVerboseCheckbox" type="checkbox" checked="true" />Verbose mode
+					<div id="TelegramInfoMessages">
+						Startup message:<br />
+						<input id="TelegramStartupMessage" type="text" value="Been awakened" /><br />
+						Shutdown message:<br />
+						<input id="TelegramShutdownMessage" type="text" value="Been terminated" />
+					</div>
+				</div>
+				<div id=TelegramSubscriberList>
+					<div id="TelegramSubscribersJTable"></div>
+					<div id="TelegramSubscribeHint">
+						To add new subscriber: Send /subscribe message to @<span id="TelegramBotName"></span>.
+					</div>
+				</div>
+			</div>
+			<div id="TelegramRegContainer" class="ButtonPanel">
+				<input id="TelegramCreateBotButton" type="button" value="Ask BotFather to create a new bot  ..."
+					   onclick="window.open('https://web.telegram.org/#/im?p=@BotFather'), '_blank'" />
+				<img id="TelegramRegInfoOpener" src="/plugin/telegram/info.png" alt="Info" width="32" align="middle" />
+				<div id="TelegramTokenContainer">
+					<input id="TelegramTokenInput" type="text" size="48" maxlength="256" value="... and then enter the received bot token here" />
+					<input id="TelegramTokenButton" type="button" value="Save"/>
+				</div>
+				
+			</div>
+			<div id="TelegramRegInfo" title="Info">
+				<p>You have to chat with BotFather and ask him to create a new bot.</p>
+				<p>There you have to define a (nick-)name and a globally unique username for your bot. That&apos;s all.</p>
+				<p>More detailled info is available <a href="https://core.telegram.org/bots" target="_blank">here</a>.</p>
+			</div>
+			<div id="TelegramUnregContainer" class="ButtonPanel">
+				<input id="TelegramSaveButton" type="button" value="Save" />
+				<input id="TelegramCancelButton" type="button" value="Cancel" />
+				<input id="TelegramDisconnectButton" type="button" value="Disconnect" style="float:right" />
+			</div>
+
+		</div>
+	</body>
+</html>

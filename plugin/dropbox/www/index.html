@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>Dropbox</title>
+	  	<link href="watchdog.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="PluginContainer">
+			<div id="DropboxLogo">
+				<a href="https://www.dropbox.com/home/Apps/Watchdog-Rpi" target="_blank">
+					<img src="/plugin/dropbox/dropbox.png" alt="Dropbox logo" width="150px" />
+				</a>
+			</div>
+			<div id="DropboxStatus">
+				<div id=DropboxDisplayName></div>
+			</div>
+			<div id="DropboxDetails">
+				<div id=DropboxFiles></div>
+				<div id=DropboxActive>
+					<input id="DropboxUpload" type="checkbox" />Upload captures
+				</div>
+			</div>
+			<div id="DropboxRegContainer" class="ButtonPanel">
+				<input id="DropboxGetAuthKeyButton" type="button" value="Get authorization key ..."/>
+				<div id="DropboxAuthContainer">
+					<input id="DropboxAuthCode" type="text" size="48" maxlength="64" value="Enter authorization code here ..." />
+					<input id="DropboxSubmitAuthKeyButton" type="button" value="Authorize"/>
+				</div>
+				
+			</div>
+			<div id="DropboxUnregContainer" class="ButtonPanel">
+				<input id="DropboxSaveButton" type="button" value="Save" />
+				<input id="DropboxCancelButton" type="button" value="Cancel" />
+				<input id="DropboxDisconnectButton" type="button" value="Disconnect" style="float:right" />
+				<input id="DropboxDeleteFilesButton" type="button" value="Delete files" style="float:right" />
+			</div>
+
+		</div>
+	</body>
+</html>

@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# This script removes the watchdog software from Raspberry PI
+
+if [[ $EUID -ne 0 ]]; then
+  echo "This uninstall script requires root privileges"
+  exit 1
+fi
+
+
+# determine script directory 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+
+# remove ramdisk mapping
+update-rc.d apache2-tmpfs remove
+rm -v /etc/init.d/apache2-tmpfs
+sed -i '/^none/d' /etc/fstab
+
+
+# uninstall plugins
+python -m watchdog.plugin.installer -v uninstall about
+python -m watchdog.plugin.installer -v uninstall settings
+python -m watchdog.plugin.installer -v uninstall ftp
+python -m watchdog.plugin.installer -v uninstall telegram
+python -m watchdog.plugin.installer -v uninstall dropbox
+python -m watchdog.plugin.installer -v uninstall capture
+python -m watchdog.plugin.installer -v uninstall email
+python -m watchdog.plugin.installer -v uninstall livecam
+
+
+# stop and remove daemon
+/etc/init.d/watchdog stop
+update-rc.d watchdog remove
+
+
+# remove dbus config
+rm -v /etc/dbus-1/system.d/net.longexposure.watchdog.conf
+
+
+# stop motion
+service motion stop
+
+
+# remove link to captures folder in webspace
+rm -v $DIR/www/captures
+
+
+# cleanup PYTHONPATH
+rm -v /usr/local/lib/python2.7/dist-packages/watchdog
+
+
+# cleanup permissions
+groupdel watchdog
+sed -i '/^%watchdog/d' /etc/sudoers
+
+
+# uninstall pip packages
+pip uninstall -y dropbox
+
+
+# delete all files in /var/lib/motion
+rm -v /var/lib/motion/*
+
+
+# remove bcm2835-v4l2 from /etc/modules
+sed -i '/bcm2835-v4l2/d' /etc/modules
+
+# remove jQuery libraries
+rm -R /usr/share/javascript/jtable
+
+
+# restore original apache setup
+a2dissite -q watchdog.conf
+a2ensite -q 000-default.conf
+a2dismod -q headers
+a2dismod -q authn_socache
+a2dismod -q socache_shmcb
+a2disconf -q javascript-common
+service apache2 reload
+
+# remove apache config files
+rm -v /etc/apache2/sites-available/watchdog.conf
+
+
+# restore hostname
+mv /etc/hostname.orig /etc/hostname
+
+
+# remove watchdog config files
+rm -v /etc/watchdog.conf
+rm -v /etc/watchdog-logging.conf
+
+
+# remove version info
+rm -v /etc/watchdog.version
+
+
+# remove installed packages
+cat $DIR/package-list | xargs apt-get -y remove
+apt-get -y autoremove
+
+
+# uninstall uv4l
+service uv4l_raspicam stop
+apt-get -y remove uv4l uv4l-raspicam uv4l-raspicam-extras
+rm -v /etc/apt/sources.list.d/uv4l.list
+apt-get update
+# TODO: remove uv4l_repo key
+
+
+# disable camera (we don't want to mess with /boot/config.txt here)
+echo "Skipped camera disabling. Use raspi-config instead if required."

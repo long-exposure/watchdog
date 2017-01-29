@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+	<head>
+	  	<meta charset="utf-8">
+	  	<title>Watchdog</title>
+	  	<script src="/javascript/jquery/jquery.js"></script>
+	  	<script src="/javascript/jquery-ui/jquery-ui.min.js"></script>
+	  	<script src="/javascript/jtable/lib/jquery.jtable.min.js" type="text/javascript"></script>
+	  	<link href="watchdog.css" rel="stylesheet" type="text/css" />
+	  	<link href="/javascript/jquery-ui-themes/sunny/jquery-ui.min.css" rel="stylesheet" type="text/css" />
+	  	<link href="/javascript/jtable/lib/themes/jqueryui/jtable_jqueryui.min.css" rel="stylesheet" type="text/css" />
+	</head>
+	<body>
+		<div id="Tabs">
+			<div id="Header">
+				<div>
+					<img src="watchdog-logo-64-64.png" alt="Watchdog logo" />
+				</div>
+				<div id="watchdog-title">Watchdog</div>
+			</div>
+		  	<ul id='tablist'></ul>
+		</div>
+		
+		<script type="text/javascript">
+			
+			var pluginNames = {};
+		
+		    $('#Tabs').hide();
+			$.holdReady(true); // postpone document ready event until all plugins are loaded
+			
+		    $.ajax({
+		        type: "GET",
+		        url: "/plugin/settings/settings.py/get_plugins",
+		        contentType: "application/json; charset=utf-8",
+		        success: function(response){
+					if (response.Result == 'ERROR')
+						alert(response.Message);
+					else {
+					    $(response.Plugins).each(function () {
+
+					    	// to create always the same tab order, we have to load plugins async
+					    	// $.getScript works sync and can not be used here!
+							$.ajax({
+						        async: false,
+						        type: 'GET',
+						        url: '/plugin/' + this['Name'] + '/' + this['Name'] + '.js',
+						        dataType: 'script'
+						    });
+						    
+						    pluginNames[this['Name']] = window.plugin.name;
+						    
+						    if (this['Active'] == true) {
+							    var tabsId = "tabs-" + this['Name'];
+							    var linkId = "link-" + this['Name'];
+							    $('#tablist').append('<li><a  id="' + linkId + '" href="#' + tabsId + '">' + window.plugin.name + '</a></li>');
+								$('#tablist').after('<div id="' + tabsId + '"></div>');
+								var fn_loaded = window[plugin.loaded]; 
+								var fn_onselect = window[plugin.onselect]; 
+								$('#' + tabsId).load('/plugin/' + this['Name'] + '/index.html #PluginContainer', fn_loaded);
+								
+								// update content when plugin tab is selected
+								if (typeof fn_onselect != 'undefined') {
+									$('#' + linkId).click(fn_onselect);
+								}
+							}
+						});
+						$.holdReady(false);
+		    		}
+		        },
+		    });
+		    
+		    $(document).ready(function () {
+		    	$('#Tabs').tabs();
+			    $('#Tabs').show();
+		    });
+		    
+		</script>
+
+	</body>
+</html>
