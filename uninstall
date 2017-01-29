@@ -107,7 +107,3 @@ apt-get -y remove uv4l uv4l-raspicam uv4l-raspicam-extras
 rm -v /etc/apt/sources.list.d/uv4l.list
 apt-get update
 # TODO: remove uv4l_repo key
-
-
-# disable camera (we don't want to mess with /boot/config.txt here)
-echo "Skipped camera disabling. Use raspi-config instead if required."

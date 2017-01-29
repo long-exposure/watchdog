@@ -10,4 +10,5 @@ git
 motion
 python-gobject
 python-dbus
+python-setuptools
 sendemail

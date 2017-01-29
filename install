@@ -19,16 +19,6 @@ CWD=$(pwd)
 cd $DIR
 
 
-# enable camera (unfortunately there is no headless version of raspi-config, so we have to simulate it)
-if grep -q "^start_x=1" "/boot/config.txt"; then
-  echo "Camera is already enabled."
-else
-  echo "start_x=1" >> /boot/config.txt
-  echo "gpu_mem=128" >> /boot/config.txt
-  echo "Enabled Camera."
-fi
-
-
 # install uv4l following this document:
 # https://blog.tausys.de/2015/02/11/raspberry-pi-als-webcam-bzw-motion-tracker/
 if [ ! -f /dev/video0 ]; then
@@ -135,6 +125,7 @@ cd /usr/share/javascript
 git clone git://github.com/hikalkan/jtable.git
 cd jtable
 git checkout tags/v2.4.0
+cd $DIR
 
 
 # patch motion start script
@@ -189,7 +180,6 @@ chmod 664 /etc/watchdog.conf
 chmod 664 /etc/watchdog-logging.conf
 chown motion /etc/motion/motion.conf
 echo "%watchdog ALL=NOPASSWD: /usr/sbin/service motion restart" >> /etc/sudoers
-
 
 # integrate in PYTHONPATH
 ln -s $DIR/python/watchdog /usr/local/lib/python2.7/dist-packages/watchdog
