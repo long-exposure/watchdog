@@ -138,7 +138,8 @@ def _get_plugins():
     config.read(CONFIG_FILE)
     activePlugins = config.get('plugins', 'active').split(',')
     inactivePlugins = config.get('plugins', 'inactive').split(',')
-    pluginDirs = os.listdir(os.path.dirname(os.path.realpath(__file__)) + '/../../../www/plugin')
+    pluginPath = os.path.dirname(os.path.realpath(__file__)) + '/../../../www/plugin'
+    pluginDirs = [d for d in os.listdir(pluginPath) if os.path.isdir(d)]
 
     for activePlugin in activePlugins:
         if ((activePlugin == 'settings') or (activePlugin == 'about')):
@@ -161,8 +162,6 @@ def _get_plugins():
     for pluginDir in pluginDirs:
         if ((pluginDir in activePlugins) or (pluginDir in inactivePlugins)):
             continue # already handled
-        if (pluginDir.startswith('.')):
-            continue # ignore .gitignore file
          
         # add new detected plugin (that is not yet defined in config)
         plugin = {}

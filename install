@@ -48,7 +48,7 @@ cat <<EOF > /etc/watchdog.conf
 sensitivity = 50
 
 [plugins]
-active: settings,about,capture,livecam,email,dropbox
+active: settings,about,capture,livecam,email,dropbox,ftp,telegram
 inactive:
 EOF
 
