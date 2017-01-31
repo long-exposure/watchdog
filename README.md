@@ -62,6 +62,8 @@ Finally install the watchdog software from github:
 $ sudo apt-get install git
 $ git clone git://github.com/long-exposure/watchdog.git
 $ cd watchdog
+$ LATESTTAG=$(git describe --tags)
+$ git checkout $LATESTTAG
 $ chmod +x install
 $ sudo ./install
 ```
@@ -74,6 +76,7 @@ All remaining configuration is done via a web interface:
     http://<IP address of your Raspberry Pi>/
 
 The admin interface is password protected. You have to enter your standard login credentials (e.g. pi/raspberry). The web admin gui hopefully is self-explaining.
+Per default all features (plugins) are active. On the settings tab you can deactivate all plugins you don't need.
 
 ### Telegram
 
