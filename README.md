@@ -4,6 +4,7 @@
 Building supervision with Raspberry Pi
 
 (C)2017 - Norbert Huffschmid
+
 License: GPLv3
 
 ## What is it?
@@ -96,9 +97,9 @@ It depends on your email account, if you can use (push) email for immediate alar
 
 ## Security
 
-Be aware that monitoring systems like watchdog can be directed against you! Keep your Raspberry Pi secure! Modify the default password! If a bad guy takes access on your Pi and its camera, he can observe you and your environment!
+Be aware that monitoring systems like watchdog can be directed against you! Keep your Raspberry Pi secure! Change the default password! If a bad guy takes access on your Pi and its camera, he can observe you and your environment!
 
-Run your Raspberry Pi behind a router and do NOT administer some port forwarding in order to access is from outside your local network. You have been warned!
+Run your Raspberry Pi behind a router and do NOT administer some port forwarding in order to access it from outside your local network. You have been warned!
 
 ## Disclaimer
 
