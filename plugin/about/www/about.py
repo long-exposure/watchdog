@@ -1,11 +1,11 @@
 # Watchdog - Building supervision with Raspberry Pi
-# (C)2016  - Norbert Huffschmid - GNU GPL V3 
+# (C)2017  - Norbert Huffschmid - GNU GPL V3 
 
 from subprocess import Popen, PIPE
 
 def index(req):
     
-    req.write('Watchdog - (C)2016 - Norbert Huffschmid\n\n')
+    req.write('Watchdog - (C)2017 - Norbert Huffschmid\n\n')
 
     req.write('Building supervision with Raspberry Pi\n\n')
     

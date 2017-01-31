@@ -1,5 +1,5 @@
 # Watchdog - Building supervision with Raspberry Pi
-# (C)2016 - Norbert Huffschmid
+# (C)2017 - Norbert Huffschmid
 
 # Plugin installer
 

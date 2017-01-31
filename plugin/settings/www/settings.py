@@ -1,5 +1,5 @@
 # Watchdog - Building supervision with Raspberry Pi
-# (C)2016  - Norbert Huffschmid - GNU GPL V3 
+# (C)2017  - Norbert Huffschmid - GNU GPL V3 
 
 import ConfigParser
 import dbus
