@@ -66,6 +66,10 @@ def set_settings(req):
         height = req.form.getfirst('height')
         sensitivity = req.form.getfirst('sensitivity')
 
+        # motion only accepts modulo8 values for width and height
+        width = str((int(width) / 8) * 8)
+        height = str((int(height) / 8) * 8)
+
         # determine motion threshold
         totalPixels = int(width) * int(height)
         thresholdMax = totalPixels / 7
