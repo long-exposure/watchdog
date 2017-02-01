@@ -20,19 +20,20 @@ With watchdog you get notified on your smartphone as soon as some motion has bee
 
 ## How is it used?
 
-Before you leave your home, you have to power-on the Raspberry Pi. After the startup procedure is complete, which will last approximately half a minute, every detected movement within the camera area will trigger an alarm. Notifications are delayed for 30 seconds, i.e. when you return home, again you have half a minute to power-off the Raspberry Pi.
+Before you leave your home, you have to power-on the Raspberry Pi. After the startup procedure is complete (which will take about half a minute) every detected movement within the camera area will trigger an alarm. Notifications are delayed for 30 seconds. That means when you return home, you have again half a minute to power-off the Raspberry Pi, before an alarm is triggered.
 
-If a burglar finds your watchdog and destroys it, most probably it already has sent a notification and uploaded the taken captures.
+If a burglar finds and destroys your watchdog, it most probably already has sent a notification and has uploaded the taken captures.
 
 ## Hardware prerequisites
 
 * Raspberry Pi
 * SD card >= 4 GB
-* RaspiCam
+* [RaspiCam (camera module for Raspberry Pi)](https://www.raspberrypi.org/products/camera-module/)
+* WLAN dongle (optional)
 
 ## Installation
 
-Download the latest Raspian Jessie Lite image and write it to your SD-card as
+Download the latest Raspbian Jessie Lite image and write it to your SD-card as
 described [here](http://www.raspbian.org/).
 
 Power-on your Raspberry with keyboard, mouse and monitor connected.
