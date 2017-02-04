@@ -104,4 +104,6 @@ Run your Raspberry Pi behind a router and do NOT administer some port forwarding
 
 This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
+Video surveillance can be a violation of privacy. Behave responsible and consider your national laws.
+
 Good luck, stay safe!
