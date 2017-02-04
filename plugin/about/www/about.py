@@ -1,6 +1,7 @@
 # Watchdog - Building supervision with Raspberry Pi
 # (C)2017  - Norbert Huffschmid - GNU GPL V3 
 
+import os
 from subprocess import Popen, PIPE
 
 def index(req):
@@ -8,10 +9,10 @@ def index(req):
     req.write('Watchdog - (C)2017 - Norbert Huffschmid\n\n')
 
     req.write('Building supervision with Raspberry Pi\n\n')
-    
-    with open ('/etc/watchdog.version', 'r') as version_file:
-        version = version_file.read()
-    req.write('Version: ' + version + '\n')
+
+    process = Popen(['/usr/bin/git', 'describe', '--tags'], stdout=PIPE, stderr=PIPE, cwd=os.path.dirname(__file__))
+    output, errors = process.communicate()
+    req.write('Version: %s\n' % output)
 
     req.write('License: GNU GPL V3\n\n')
     

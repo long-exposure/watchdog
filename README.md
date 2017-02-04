@@ -64,8 +64,6 @@ Finally install the watchdog software from github:
 $ sudo apt-get install git
 $ git clone git://github.com/long-exposure/watchdog.git
 $ cd watchdog
-$ LATESTTAG=$(git describe --tags)
-$ git checkout $LATESTTAG
 $ chmod +x install
 $ sudo ./install
 ```

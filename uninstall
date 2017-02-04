@@ -56,7 +56,8 @@ sed -i '/^%watchdog/d' /etc/sudoers
 
 
 # uninstall pip packages
-pip uninstall -y dropbox
+pip uninstall -y setuptools
+pip uninstall -y requests
 
 
 # delete all files in /var/lib/motion
@@ -90,10 +91,6 @@ mv /etc/hostname.orig /etc/hostname
 # remove watchdog config files
 rm -v /etc/watchdog.conf
 rm -v /etc/watchdog-logging.conf
-
-
-# remove version info
-rm -v /etc/watchdog.version
 
 
 # remove installed packages

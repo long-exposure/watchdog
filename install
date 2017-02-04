@@ -34,10 +34,6 @@ echo "Install required debian packages ..."
 cat package-list | xargs apt-get -y install
 
 
-# store version info
-git describe --tags > /etc/watchdog.version
-
-
 # create initial config file
 cat <<EOF > /etc/watchdog.conf
 # This is the watchdog configuration file
