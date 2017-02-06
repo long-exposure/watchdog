@@ -13,4 +13,4 @@ But when you look closer, you can see the Raspberry Pi camera module looking at 
 
 All the required hardware stuff (Raspberry Pi, camera module, SD card and WLAN dongle) is mounted on the backside of the picture frame.
 
-![Camera](/doc/images/rpi.jpg)
+![Raspberry Pi](/doc/images/rpi.jpg)
