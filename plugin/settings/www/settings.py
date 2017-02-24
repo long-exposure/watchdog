@@ -76,6 +76,9 @@ def set_settings(req):
         thresholdMin = thresholdMax / 100
         threshold = str((thresholdMin - thresholdMax) / 100 * int(sensitivity) + thresholdMax)
         
+        #determine motion lightswitch value
+        lightswitch = str(100 - int(sensitivity))
+        
         config = ConfigParser.SafeConfigParser()
         config.read(CONFIG_FILE)
         config.set('plugins', 'active', activePlugins)
@@ -104,6 +107,7 @@ def set_settings(req):
         urllib2.urlopen("http://localhost:8080/0/config/set?width=" + width).read()
         urllib2.urlopen("http://localhost:8080/0/config/set?height=" + height).read()
         urllib2.urlopen("http://localhost:8080/0/config/set?threshold=" + threshold).read()
+        urllib2.urlopen("http://localhost:8080/0/config/set?lightswitch=" + lightswitch).read()
         urllib2.urlopen("http://localhost:8080/0/config/writeyes").read()
 
         config = ConfigParser.SafeConfigParser()
