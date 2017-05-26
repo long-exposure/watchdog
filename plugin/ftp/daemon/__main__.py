@@ -79,8 +79,8 @@ class FtpPlugin(object):
             config.read(CONFIG_FILE)
           
             if (config.getboolean('ftp', 'active') == True):
-                logger.info('Uploading images to ' + config.get('ftp', 'host') + ' ...')                
-                ftp = ftplib.FTP(config.get('ftp', 'host'))
+                logger.info('Uploading images to ' + config.get('ftp', 'host') + ' ...')
+                ftp = ftplib.FTP_TLS(config.get('ftp', 'host'))
                 ftp.login(config.get('ftp', 'user'), config.get('ftp', 'password'))
                 ftp.cwd(config.get('ftp', 'directory').strip('/'))
                 for path in captures:
